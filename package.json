@@ -35,6 +35,8 @@
   ],
   "homepage": "https://github.com/OpenZeppelin/contract-loader#readme",
   "devDependencies": {
+    "@types/node": "^12.7.5",
+    "@types/web3": "^1.0.19",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
     "@typescript-eslint/parser": "^2.2.0",
     "eslint": "^6.3.0",
@@ -46,6 +48,6 @@
     "typescript": "^3.6.3"
   },
   "dependencies": {
-    "web3": "^1.2.1"
+    "web3-eth-contract": "^1.2.1"
   }
 }
