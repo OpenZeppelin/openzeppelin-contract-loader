@@ -35,6 +35,7 @@
   ],
   "homepage": "https://github.com/OpenZeppelin/contract-loader#readme",
   "devDependencies": {
+    "@types/fs-extra": "^8.0.0",
     "@types/node": "^12.7.5",
     "@types/web3": "^1.0.19",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
@@ -48,6 +49,8 @@
     "typescript": "^3.6.3"
   },
   "dependencies": {
+    "find-up": "^4.1.0",
+    "fs-extra": "^8.1.0",
     "web3-eth-contract": "^1.2.1"
   }
 }
