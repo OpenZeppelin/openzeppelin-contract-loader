@@ -1,13 +1,19 @@
-import web3Contract from 'web3/eth/contract';
-import fs from 'fs-extra';
+import { readJSONSync } from 'fs-extra';
 import findUp from 'find-up';
 
-export default async function(contract: string) {
-  const artifactsDir = await findUp('build/contracts');
-  if (!artifactsDir) {
+import { get as getWeb3 } from './configure';
+
+function artifactsDir(buildDir: string): string {
+  return `${buildDir}/contracts`;
+}
+
+export default function(contract: string): any {
+  const buildDir = findUp.sync('build', { type: 'directory' });
+
+  if (!buildDir || !findUp.sync.exists(artifactsDir(buildDir))) {
     throw new Error('Could not find compiled artifacts directory');
   }
 
-  const { abi, bytecode } = await fs.readJSON(`${artifactsDir}/${contract}.json`, { encoding: 'utf8' });
-  return new web3Contract(abi, undefined, { data: bytecode });
+  const { abi, bytecode } = readJSONSync(`${artifactsDir(buildDir)}/${contract}.json`, { encoding: 'utf8' });
+  return new (getWeb3()).eth.Contract(abi, undefined, { data: bytecode });
 }

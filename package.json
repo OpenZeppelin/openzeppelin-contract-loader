@@ -1,11 +1,14 @@
 {
-  "name": "contract-loader",
+  "name": "@openzeppelin/contract-loader",
   "version": "0.1.0",
   "description": "Load contract ABIs from built artifacts and return contract objects",
-  "main": "index.js",
+  "files": [
+    "lib"
+  ],
+  "main": "./lib/index.js",
   "scripts": {
     "compile": "rm -rf lib && tsc",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "./test/run.sh",
     "watch": "tsc -w"
   },
   "husky": {
@@ -50,7 +53,9 @@
   },
   "dependencies": {
     "find-up": "^4.1.0",
-    "fs-extra": "^8.1.0",
+    "fs-extra": "^8.1.0"
+  },
+  "peerDependencies": {
     "web3-eth-contract": "^1.2.1"
   }
 }
