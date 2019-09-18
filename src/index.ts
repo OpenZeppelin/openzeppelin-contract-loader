@@ -7,7 +7,7 @@ function artifactsDir(buildDir: string): string {
   return `${buildDir}/contracts`;
 }
 
-export default function(contract: string): any {
+export function load(contract: string): any {
   const buildDir = findUp.sync('build', { type: 'directory' });
 
   if (!buildDir || !findUp.sync.exists(artifactsDir(buildDir))) {
