@@ -3,7 +3,7 @@
 [![NPM Package](https://img.shields.io/npm/v/@openzeppelin/contract-loader.svg)](https://www.npmjs.org/package/@openzeppelin/contract-loader)
 [![Build Status](https://travis-ci.com/OpenZeppelin/openzeppelin-contract-loader.svg?branch=master)](https://travis-ci.com/OpenZeppelin/openzeppelin-contract-loader)
 
-**Load contract ABIs from built artifacts and return web3-eth-contract objects**.
+**Load contract ABIs from built artifacts and return web3-eth-contract objects.**
 
 ## Installation
 
@@ -14,8 +14,7 @@ npm install --save-dev @openzeppelin/contract-loader
 ## Usage
 
 ```javascript
-require('@openzeppelin/contract-loader/lib/configure').set({ web3Contract: web3.eth.Contract });
-const { load } = require('@openzeppelin/contract-loader');
+const load = require('@openzeppelin/contract-loader')({ web3Contract: web3.eth.Contract });
 
 const ERC20 = load('ERC20');
 
