@@ -6,7 +6,7 @@ contract('direct-dependency', function([sender]) {
   describe('project contracts', async function () {
     context('with no sender and gas configuration', function () {
       before(async function () {
-        require('@openzeppelin/contract-loader/lib/configure').set({ web3EthContract: web3.eth.Contract });
+        require('@openzeppelin/contract-loader/lib/configure').set({ web3Contract: web3.eth.Contract });
       });
 
       it('default sender is not set', async function () {
@@ -29,9 +29,9 @@ contract('direct-dependency', function([sender]) {
 
       before(async function () {
         require('@openzeppelin/contract-loader/lib/configure').set({
-          web3EthContract: web3.eth.Contract,
+          web3Contract: web3.eth.Contract,
           defaultSender: sender,
-          gas
+          defaultGas: gas
         });
       });
 

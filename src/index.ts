@@ -16,6 +16,6 @@ export function load(contract: string): any {
 
   const { abi, bytecode } = readJSONSync(`${artifactsDir(buildDir)}/${contract}.json`, { encoding: 'utf8' });
 
-  const { web3EthContract, defaultSender, gas } = getConfig();
-  return new web3EthContract(abi, undefined, { data: bytecode, from: defaultSender, gas });
+  const { web3Contract, defaultSender, defaultGas } = getConfig();
+  return new web3Contract(abi, undefined, { data: bytecode, from: defaultSender, gas: defaultGas });
 }
