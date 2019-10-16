@@ -1,9 +1,25 @@
-let web3: any;
+import Web3 from 'web3';
 
-export function set(_web3: any): void {
-  web3 = _web3;
+interface ContractLoaderConfig {
+  web3EthContract: Web3['eth']['Contract'];
+  defaultSender: string;
+  gas: number;
 }
 
-export function get(): any {
-  return web3;
+let config: ContractLoaderConfig | undefined;
+
+export function set({ web3EthContract, defaultSender = '', gas = 8e6 }: Partial<ContractLoaderConfig>): void {
+  if (web3EthContract === undefined) {
+    throw new Error('No web3-eth-contract instance supplied');
+  }
+
+  config = { web3EthContract, defaultSender, gas };
+}
+
+export function get(): ContractLoaderConfig {
+  if (config !== undefined) {
+    return config;
+  } else {
+    throw new Error('Configuration has not been set');
+  }
 }

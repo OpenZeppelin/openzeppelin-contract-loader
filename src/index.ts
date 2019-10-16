@@ -1,7 +1,7 @@
 import { readJSONSync } from 'fs-extra';
 import findUp from 'find-up';
 
-import { get as getWeb3 } from './configure';
+import { get as getConfig } from './configure';
 
 function artifactsDir(buildDir: string): string {
   return `${buildDir}/contracts`;
@@ -15,5 +15,7 @@ export function load(contract: string): any {
   }
 
   const { abi, bytecode } = readJSONSync(`${artifactsDir(buildDir)}/${contract}.json`, { encoding: 'utf8' });
-  return new (getWeb3()).eth.Contract(abi, undefined, { data: bytecode });
+
+  const { web3EthContract, defaultSender, gas } = getConfig();
+  return new web3EthContract(abi, undefined, { data: bytecode, from: defaultSender, gas });
 }
