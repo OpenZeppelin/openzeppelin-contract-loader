@@ -1,0 +1,21 @@
+dist: trusty
+sudo: false
+group: beta
+language: node_js
+node_js:
+  - "8"
+
+cache:
+  directories:
+    - node_modules
+
+jobs:
+  fast_finish: true
+  include:
+    - stage: Compile
+      name: "Compile"
+      script: npm run compile
+
+    - stage: Integration tests
+      name: "Direct Dependency"
+      script: ./test/direct-dependency/run.sh
