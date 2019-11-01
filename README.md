@@ -3,7 +3,7 @@
 [![NPM Package](https://img.shields.io/npm/v/@openzeppelin/contract-loader.svg)](https://www.npmjs.org/package/@openzeppelin/contract-loader)
 [![Build Status](https://circleci.com/gh/OpenZeppelin/openzeppelin-contract-loader.svg?style=shield)](https://circleci.com/gh/OpenZeppelin/openzeppelin-contract-loader)
 
-**Load contract ABIs from built artifacts.** Includes support for both web3-eth-contract and @truffle/contract objects.
+**Load contract ABIs from built artifacts.** Includes support for both [web3-eth-contract](https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html) and [@truffle/contract](https://web3js.readthedocs.io/en/v1.2.0/web3-eth-contract.html) objects.
 
 ## Installation
 
