@@ -11,5 +11,8 @@
     "chai": "^4.2.0",
     "truffle": "^5.0.36"
   },
-  "dependencies": {}
+  "dependencies": {
+    "@truffle/contract": "^4.0.38",
+    "web3": "^1.2.2"
+  }
 }

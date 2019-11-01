@@ -10,5 +10,7 @@ module.exports = {
       sourceType: 'module', // Allows for the use of imports
   },
   rules: {
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-function-return-type": "off"
   }
 };
