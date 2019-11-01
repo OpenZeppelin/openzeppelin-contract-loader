@@ -1,10 +1,10 @@
+const loader = require('@openzeppelin/contract-loader');
 const { expect } = require('chai');
 
 contract('direct-dependency', function([sender]) {
   describe('project contracts', async function () {
     describe('web3 contracts', function () {
       context('with no sender and gas configuration', function () {
-        const loader = require('@openzeppelin/contract-loader');
         const load = loader.web3({ web3Contract: web3.eth.Contract })
 
         it('default sender is not set', async function () {
@@ -25,7 +25,6 @@ contract('direct-dependency', function([sender]) {
       context('with default sender and gas configuration', function () {
         const gas = 5e6;
 
-        const loader = require('@openzeppelin/contract-loader');
         const load = loader.web3({
           web3Contract: web3.eth.Contract,
           defaultSender: sender,
@@ -61,7 +60,6 @@ contract('direct-dependency', function([sender]) {
 
     describe('truffle contracts', function () {
       context('with no sender and gas configuration', function () {
-        const loader = require('@openzeppelin/contract-loader');
         const load = loader.truffle({
           truffleContract: require('@truffle/contract'),
           provider: web3.eth.currentProvider
@@ -85,7 +83,6 @@ contract('direct-dependency', function([sender]) {
       context('with default sender and gas configuration', function () {
         const gas = 5e6;
 
-        const loader = require('@openzeppelin/contract-loader');
         const load = loader.truffle({
           truffleContract: require('@truffle/contract'),
           provider: web3.eth.currentProvider,

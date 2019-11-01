@@ -2,5 +2,5 @@
 
 for dir in */
 do
-  ./run-test.sh ${dir%*/}
+  bash -x ./run-test.sh ${dir%*/}
 done
