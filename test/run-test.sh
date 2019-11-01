@@ -2,7 +2,7 @@
 
 set -o errexit
 
-cd "$(dirname $0)"
+cd $1
 
 # Get a package like a user would install
 pkg="$(npm pack ../../ 2> /dev/null)"

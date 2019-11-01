@@ -8,7 +8,7 @@
   "main": "./lib/index.js",
   "scripts": {
     "compile": "rm -rf lib && tsc",
-    "test": "./test/run.sh",
+    "test": "cd test && ./run-all.sh",
     "watch": "tsc -w"
   },
   "husky": {
