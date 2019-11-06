@@ -1,4 +1,4 @@
-{
+7{
   "name": "@openzeppelin/contract-loader",
   "version": "0.3.0",
   "description": "Load contract ABIs from built artifacts and return contract objects",
@@ -55,9 +55,5 @@
   "dependencies": {
     "find-up": "^4.1.0",
     "fs-extra": "^8.1.0"
-  },
-  "peerDependencies": {
-    "@truffle/contract": "^4.0.0",
-    "web3-eth-contract": "^1.2.1"
   }
 }
