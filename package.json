@@ -1,4 +1,4 @@
-7{
+{
   "name": "@openzeppelin/contract-loader",
   "version": "0.3.0",
   "description": "Load contract ABIs from built artifacts and return contract objects",
@@ -41,7 +41,6 @@
   "devDependencies": {
     "@types/fs-extra": "^8.0.0",
     "@types/node": "^12.7.5",
-    "@types/web3": "^1.0.19",
     "@typescript-eslint/eslint-plugin": "^2.2.0",
     "@typescript-eslint/parser": "^2.2.0",
     "eslint": "^6.3.0",
@@ -54,6 +53,7 @@
   },
   "dependencies": {
     "find-up": "^4.1.0",
-    "fs-extra": "^8.1.0"
+    "fs-extra": "^8.1.0",
+    "try-require": "^1.2.1"
   }
 }
