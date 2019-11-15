@@ -71,15 +71,7 @@ function truffleLoader(provider: any, defaultSender: string, defaultGas: number)
   return { fromABI, fromArtifacts };
 }
 
-export function setupLoader({
-  provider,
-  defaultSender = '',
-  defaultGas = 8e6,
-}: {
-  provider: any;
-  defaultSender: string;
-  defaultGas: number;
-}) {
+export function setupLoader({ provider, defaultSender = '', defaultGas = 8e6 }: LoaderConfig) {
   return {
     web3: web3Loader(provider, defaultSender, defaultGas),
     truffle: truffleLoader(provider, defaultSender, defaultGas),
