@@ -4,7 +4,6 @@ import findUp from 'find-up';
 import tryRequire from 'try-require';
 
 interface LoaderConfig {
-  provider: any;
   defaultSender: string;
   defaultGas: number;
 }
@@ -23,7 +22,9 @@ function loadArtifacts(contract: string) {
   return readJSONSync(`${artifactsDir(buildDir)}/${contract}.json`, { encoding: 'utf8' });
 }
 
-function web3Loader(provider: any, defaultSender: string, defaultGas: number) {
+function web3Loader(provider: any, config: LoaderConfig) {
+  const { defaultSender, defaultGas } = config;
+
   const web3Contract = tryRequire('web3-eth-contract');
   if (web3Contract === undefined) {
     throw new Error(
@@ -46,7 +47,9 @@ function web3Loader(provider: any, defaultSender: string, defaultGas: number) {
   return { fromABI, fromArtifacts };
 }
 
-function truffleLoader(provider: any, defaultSender: string, defaultGas: number) {
+function truffleLoader(provider: any, config: LoaderConfig) {
+  const { defaultSender, defaultGas } = config;
+
   const truffleContract = tryRequire('@truffle/contract');
   if (truffleContract === undefined) {
     throw new Error(
@@ -71,9 +74,15 @@ function truffleLoader(provider: any, defaultSender: string, defaultGas: number)
   return { fromABI, fromArtifacts };
 }
 
-export function setupLoader({ provider, defaultSender = '', defaultGas = 8e6 }: LoaderConfig) {
+export function setupLoader(provider: any, config: Partial<LoaderConfig>) {
+  const configWithDefaults: LoaderConfig = {
+    defaultSender: '',
+    defaultGas: 8e6,
+    ...config,
+  };
+
   return {
-    web3: web3Loader(provider, defaultSender, defaultGas),
-    truffle: truffleLoader(provider, defaultSender, defaultGas),
+    web3: web3Loader(provider, configWithDefaults),
+    truffle: truffleLoader(provider, configWithDefaults),
   };
 }
