@@ -13,7 +13,7 @@ function artifactsDir(buildDir: string): string {
   return `${buildDir}/contracts`;
 }
 
-function loadArtifacts(contract: string) {
+function loadArtifact(contract: string) {
   const buildDir = findUp.sync('build', { type: 'directory' });
 
   if (!buildDir || !findUp.sync.exists(artifactsDir(buildDir))) {
@@ -38,12 +38,12 @@ function web3Loader(provider: any, defaultSender: string, defaultGas: number) {
     return new web3Contract(abi, undefined, { data: bytecode, from: defaultSender, gas: defaultGas });
   }
 
-  function fromArtifacts(contract: string) {
-    const { abi, bytecode } = loadArtifacts(contract);
+  function fromArtifact(contract: string) {
+    const { abi, bytecode } = loadArtifact(contract);
     return fromABI(abi, bytecode);
   }
 
-  return { fromABI, fromArtifacts };
+  return { fromABI, fromArtifact };
 }
 
 function truffleLoader(provider: any, defaultSender: string, defaultGas: number) {
@@ -63,12 +63,12 @@ function truffleLoader(provider: any, defaultSender: string, defaultGas: number)
     return abstraction;
   }
 
-  function fromArtifacts(contract: string) {
-    const { abi, bytecode } = loadArtifacts(contract);
+  function fromArtifact(contract: string) {
+    const { abi, bytecode } = loadArtifact(contract);
     return fromABI(abi, bytecode);
   }
 
-  return { fromABI, fromArtifacts };
+  return { fromABI, fromArtifact };
 }
 
 export function setupLoader({ provider, defaultSender = '', defaultGas = 8e6 }: LoaderConfig) {

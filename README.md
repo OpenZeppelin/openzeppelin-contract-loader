@@ -23,9 +23,9 @@ const { setupLoader } = require('@openzeppelin/contract-loader');
 const loader = setupLoader({
   provider,
   defaultSender, // optional
-  defaultGas,    // optional - defaults to 8 million
+  defaultGas, // optional - defaults to 8 million
 });
-````
+```
 
 ### Loading web3 contracts
 
@@ -33,7 +33,7 @@ const loader = setupLoader({
 const web3Loader = loader.web3;
 
 // Load from artifacts built by the compiler (stored in .json files)
-const ERC20 = web3Loader.fromArtifacts('ERC20');
+const ERC20 = web3Loader.fromArtifact('ERC20');
 
 // Or load directly from an ABI
 const abi = [ ... ];
@@ -53,7 +53,7 @@ await token.methods.transfer(receiver, balance).send({ from: sender });
 const truffleLoader = loader.truffle;
 
 // Load from artifacts built by the compiler (stored in .json files)
-const ERC20 = truffleLoader.fromArtifacts('ERC20');
+const ERC20 = truffleLoader.fromArtifact('ERC20');
 
 // Or load directly from an ABI
 const abi = [ ... ];
