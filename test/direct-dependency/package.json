@@ -9,7 +9,8 @@
   "license": "MIT",
   "devDependencies": {
     "chai": "^4.2.0",
-    "truffle": "^5.0.43"
+    "truffle": "^5.0.43",
+    "@openzeppelin/contracts": "2.4.0"
   },
   "dependencies": {
     "@truffle/contract": "^4.0.38",

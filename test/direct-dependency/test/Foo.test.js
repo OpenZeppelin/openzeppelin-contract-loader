@@ -115,4 +115,36 @@ contract('direct-dependency', function([sender]) {
       });
     });
   });
+
+  describe('dependency contracts', function () {
+    beforeEach('setup loader', function () {
+      this.loader = setupLoader({ provider: web3 });
+    });
+
+    describe('web3 contracts', function () {
+      it('loads an openzeppelin contract', async function () {
+        const IERC20 = this.loader.web3.fromArtifact('@openzeppelin/contracts/IERC20');
+        expect(IERC20.methods).to.have.property('transfer').that.is.a('function');
+      });
+
+      it('fails to load contract from missing dependency', async function () {
+        expect(() => 
+          this.loader.web3.fromArtifact('foobar/IERC20')
+        ).to.throw(/Cannot find contract/);
+      });
+    });
+
+    describe('truffle contracts', function () {
+      it('loads an openzeppelin contract', async function () {
+        const IERC20 = this.loader.truffle.fromArtifact('@openzeppelin/contracts/IERC20');
+        expect(IERC20.abi).to.have.lengthOf(8);
+      });
+
+      it('fails to load contract from missing dependency', async function () {
+        expect(() => 
+          this.loader.truffle.fromArtifact('foobar/IERC20')
+        ).to.throw(/Cannot find contract/);
+      });
+    });
+  });
 });
