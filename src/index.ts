@@ -1,7 +1,7 @@
 import { readJSONSync } from 'fs-extra';
 import findUp from 'find-up';
-
 import tryRequire from 'try-require';
+import { join } from 'path';
 
 interface LoaderConfig {
   provider: any;
@@ -9,18 +9,29 @@ interface LoaderConfig {
   defaultGas: number;
 }
 
-function artifactsDir(buildDir: string): string {
-  return `${buildDir}/contracts`;
+function localArtifactPath(contract: string): string {
+  const buildDir = findUp.sync('build/contracts', { type: 'directory' });
+  if (!buildDir) {
+    throw new Error('Could not find local "build/contracts" directory');
+  }
+  return join(buildDir, `${contract}.json`);
 }
 
-function loadArtifact(contract: string) {
-  const buildDir = findUp.sync('build', { type: 'directory' });
-
-  if (!buildDir || !findUp.sync.exists(artifactsDir(buildDir))) {
-    throw new Error('Could not find compiled artifacts directory');
+function dependencyArtifactPath(contractWithDependency: string): string {
+  const fragments = contractWithDependency.split('/');
+  const contract = fragments.pop();
+  const dependency = fragments.join('/');
+  try {
+    return require.resolve(`${dependency}/build/contracts/${contract}.json`);
+  } catch (err) {
+    throw new Error(`Cannot find contract  ${contractWithDependency}: ${err.message}`);
   }
+}
 
-  return readJSONSync(`${artifactsDir(buildDir)}/${contract}.json`, { encoding: 'utf8' });
+function loadArtifact(contract: string): any {
+  const artifactPath = contract.includes('/') ? dependencyArtifactPath : localArtifactPath;
+
+  return readJSONSync(artifactPath(contract), { encoding: 'utf8' });
 }
 
 function web3Loader(provider: any, defaultSender: string, defaultGas: number) {
