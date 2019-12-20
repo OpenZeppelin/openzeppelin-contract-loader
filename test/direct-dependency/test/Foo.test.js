@@ -1,5 +1,9 @@
 const { setupLoader } = require('@openzeppelin/contract-loader');
-const { expect } = require('chai');
+
+const chai = require('chai');
+chai.use(require('chai-bn')(web3.utils.BN));
+
+const { expect } = chai;
 
 function testWeb3LoaderWithDefaults(loader) {
   it('throws if the contract does not exist', async function() {
@@ -23,14 +27,45 @@ function testWeb3LoaderWithDefaults(loader) {
 
     it('loads contract given its address', async function () {
       const foo = loader.fromArtifact('Foo', this.foo.options.address);
-      expect(await foo.methods.bar().call()).to.equal('bar');
+
+      await this.foo.methods.set('42').send();
+      expect(await foo.methods.value().call()).to.equal('42');
     });
   });
 }
 
-const defaultGas = 5e6;
+function testTruffleLoaderWithDefaults(loader) {
+  it('throws if the contract does not exist', async function() {
+    expect(() => loader.fromArtifact('Baz')).to.throw();
+  });
 
-contract('direct-dependency', function([sender]) {
+  context('with deployed contract', function() {
+    beforeEach('deploying', async function() {
+      const Foo = loader.fromArtifact('Foo');
+      this.foo = await Foo.new();
+    });
+
+    it('can call view functions', async function() {
+      expect(await this.foo.bar()).to.equal('bar');
+    });
+
+    it('can send transactions', async function() {
+      await this.foo.set('10');
+      expect(await this.foo.value()).to.bignumber.equal('10');
+    });
+
+    it('loads contract given its address', async function () {
+      const foo = loader.fromArtifact('Foo', this.foo.address);
+
+      await this.foo.set('42');
+      expect(await foo.value()).to.bignumber.equal('42');
+    });
+  });
+}
+
+contract('direct-dependency', function([defaultSender]) {
+  const defaultGas = 5e6;
+
   describe('project contracts', async function() {
     describe('web3 contracts', function() {
       context('with no sender and gas configuration', function() {
@@ -54,15 +89,15 @@ contract('direct-dependency', function([sender]) {
       context('with default sender and gas configuration', function() {
         const web3Loader = setupLoader({
           provider: web3.eth.currentProvider,
-          defaultSender: sender,
+          defaultSender,
           defaultGas,
         }).web3;
 
         it('default sender is set', async function() {
           const Foo = web3Loader.fromArtifact('Foo');
-          expect(Foo.options.from).to.equal(sender);
+          expect(Foo.options.from).to.equal(defaultSender);
         });
-      
+
         it('default gas is set', async function() {
           const Foo = web3Loader.fromArtifact('Foo');
           expect(Foo.options.gas).to.equal(defaultGas);
@@ -72,13 +107,13 @@ contract('direct-dependency', function([sender]) {
       });
 
       context('with web3 object and defaults', function () {
-        const web3Loader = setupLoader({ 
+        const web3Loader = setupLoader({
           provider: web3,
-          defaultSender: sender,
+          defaultSender,
           defaultGas
-         }).web3;
+        }).web3;
 
-         testWeb3LoaderWithDefaults(web3Loader);
+        testWeb3LoaderWithDefaults(web3Loader);
       });
     });
 
@@ -106,13 +141,13 @@ contract('direct-dependency', function([sender]) {
       context('with default sender and gas configuration', function() {
         const truffleLoader = setupLoader({
           provider: web3.eth.currentProvider,
-          defaultSender: sender,
+          defaultSender,
           defaultGas,
         }).truffle;
 
         it('default sender is set', async function() {
           const Foo = truffleLoader.fromArtifact('Foo');
-          expect(Foo.defaults().from).to.equal(sender);
+          expect(Foo.defaults().from).to.equal(defaultSender);
         });
 
         it('default gas is set', async function() {
@@ -120,25 +155,17 @@ contract('direct-dependency', function([sender]) {
           expect(Foo.defaults().gas).to.equal(defaultGas);
         });
 
-        it('throws if the contract does not exist', async function() {
-          expect(() => truffleLoader.fromArtifact('Baz')).to.throw();
-        });
+        testTruffleLoaderWithDefaults(truffleLoader);
+      });
 
-        context('with deployed contract', function() {
-          beforeEach('deploying', async function() {
-            const Foo = truffleLoader.fromArtifact('Foo');
-            this.foo = await Foo.new();
-          });
+      context('with web3 object and defaults', function () {
+        const truffleLoader = setupLoader({
+          provider: web3,
+          defaultSender,
+          defaultGas
+        }).truffle;
 
-          it('view functions can be called', async function() {
-            expect(await this.foo.bar()).to.equal('bar');
-          });
-
-          it('loads contract given its address', async function () {
-            const foo = truffleLoader.fromArtifact('Foo', this.foo.address);
-            expect(await foo.bar()).to.equal('bar');
-          });
-        });
+        testTruffleLoaderWithDefaults(truffleLoader);
       });
     });
   });
