@@ -122,7 +122,15 @@ export class TruffleLoader extends BaseLoader {
   }
 }
 
-export function setupLoader({ provider, defaultSender, defaultGas = 8e6 }: LoaderConfig) {
+export function setupLoader({
+  provider,
+  defaultSender,
+  defaultGas = 8e6,
+}: {
+  provider: any;
+  defaultSender: string;
+  defaultGas: number;
+}) {
   return {
     web3: new Web3Loader(provider, defaultSender, defaultGas),
     truffle: new TruffleLoader(provider, defaultSender, defaultGas),
