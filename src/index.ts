@@ -3,6 +3,9 @@ import findUp from 'find-up';
 import tryRequire from 'try-require';
 import { join } from 'path';
 
+const DEFAULT_GAS = 2e5;
+const DEFAULT_GAS_PRICE = 1e9;
+
 interface LoaderConfig {
   provider: any;
   defaultSender?: string;
@@ -134,7 +137,12 @@ export class TruffleLoader extends BaseLoader {
   }
 }
 
-export function setupLoader({ provider, defaultSender, defaultGas = 4e6, defaultGasPrice = 1e9 }: LoaderConfig) {
+export function setupLoader({
+  provider,
+  defaultSender,
+  defaultGas = DEFAULT_GAS,
+  defaultGasPrice = DEFAULT_GAS_PRICE,
+}: LoaderConfig) {
   return {
     web3: new Web3Loader(provider, defaultSender, defaultGas, defaultGasPrice),
     truffle: new TruffleLoader(provider, defaultSender, defaultGas, defaultGasPrice),

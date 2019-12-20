@@ -77,9 +77,9 @@ contract('direct-dependency', function([defaultSender]) {
           expect(Foo.options.from).to.be.undefined;
         });
 
-        it('default gas is 4 million', async function() {
+        it('default gas is 200k', async function() {
           const Foo = web3Loader.fromArtifact('Foo');
-          expect(Foo.options.gas).to.equal(4e6);
+          expect(Foo.options.gas).to.equal(2e5);
         });
 
         it('default gas price is 1 gwei', async function() {
@@ -140,9 +140,9 @@ contract('direct-dependency', function([defaultSender]) {
           expect(Foo.defaults().from).to.be.undefined;
         });
 
-        it('default gas is 4 million', async function() {
+        it('default gas is 200k', async function() {
           const Foo = truffleLoader.fromArtifact('Foo');
-          expect(Foo.defaults().gas).to.equal(4e6);
+          expect(Foo.defaults().gas).to.equal(2e5);
         });
 
         it('default gas price is 1 gwei', async function() {
