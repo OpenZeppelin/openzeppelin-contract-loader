@@ -9,7 +9,6 @@ function setupLoader({ provider, defaultSender, defaultGas, defaultGasPrice }: {
     provider: any;
     defaultSender: string?;
     defaultGas: number?;
-    defaultGasPrice: number?;
 });
 ```
 
@@ -17,19 +16,13 @@ function setupLoader({ provider, defaultSender, defaultGas, defaultGasPrice }: {
 
 The web3 provider to use when connecting to the blockchain.
 
-This can be either a plan provider object, or a web3 instance connected to one.
-
 === `defaultSender`
 
 The address to send transactions from when no explicit `from` field is provided. Optional, no default value.
 
 === `defaultGas`
 
-How much gas to allocate for transactions when no explicit `gas` field is provided. Optional, defaults to 200 thousand.
-
-=== `defaultGasPrice`
-
-The gas price for transactions when no explicit `gasPrice` field is provided. Optional, defaults to 1 gigawei.
+How much gas to allocate for transactions when no explicit `gas` field is provided. Optional, defaults to 8 million.
 
 == Using the Loader
 
@@ -39,8 +32,8 @@ Despite these contract abstractions being different, each specialized loader exp
 
 ```typescript
 interface Loader {
-    fromArtifact(name: string, address?: string): any;
-    fromABI(abi: object, bytecode?: string, address?: string): any;
+    fromArtifact(name: string): any;
+    fromABI(abi: object, bytecode?: string): any;
 };
 
 function setupLoader(options) : {
@@ -55,26 +48,17 @@ function setupLoader(options) : {
 function fromArtifact(name: string, address?: string): any;
 ```
 
-Loads a contract abstraction object from artifacts built by the compiler. If `address` is provided, it instead returns a contract instance initialized at the provided address.
+Loads a contract abstraction object from artifacts built by the compiler.
 
 Receives the contract's `name` and looks for its corresponding `.json` artifact file in the `build/contracts` directory.
-
-[TIP]
-====
-Contracts from dependencies can be loaded by prefixing the contract name with the dependency:
-
-```javascript
-loader.fromArtifact('@openzeppelin/contracts/token/ERC20/ERC20.sol');
-```
-====
 
 === `fromABI`
 
 ```typescript
-function fromABI(abi: object, bytecode?: string, address?: string): any;
+function fromABI(abi: object, bytecode?: string): any;
 ```
 
-Loads a contract abstraction object from the provided ABI. If `address` is provided, it instead returns a contract instance initialized at the provided address.
+Loads a contract abstraction object from the provided ABI.
 
 To deploy new contract instances, `bytecode` must be provided.
 
@@ -85,5 +69,3 @@ TIP: The `.json` artifact files are quite large: use `fromABI` to minimize how m
 Contract Loader needs to know how to create web3 and Truffle contracts, but it doesn't force a specific version of either on you.
 
 Instead, it is up to the caller to make sure the required dependencies are available. To load web3 contracts, you may need to install https://www.npmjs.com/package/web3-eth-contract[`web3-eth-contract`], while you may require https://www.npmjs.com/package/@truffle/contract[`@truffle/contract`] for Truffle contracts.
-
-TIP: When using web3 contracts, you can pass a web3 instance as `provider` to `setupLoader`, and it will use that same instance to create new contracts.
