@@ -76,9 +76,9 @@ contract('direct-dependency', function([defaultSender]) {
           expect(Foo.options.from).to.be.undefined;
         });
 
-        it('default gas is 8 million', async function() {
+        it('default gas is 4 million', async function() {
           const Foo = web3Loader.fromArtifact('Foo');
-          expect(Foo.options.gas).to.equal(8e6);
+          expect(Foo.options.gas).to.equal(4e6);
         });
 
         it('throws if the contract does not exist', async function() {
@@ -128,9 +128,9 @@ contract('direct-dependency', function([defaultSender]) {
           expect(Foo.defaults().from).to.be.undefined;
         });
 
-        it('default gas is 8 million', async function() {
+        it('default gas is 4 million', async function() {
           const Foo = truffleLoader.fromArtifact('Foo');
-          expect(Foo.defaults().gas).to.equal(8e6);
+          expect(Foo.defaults().gas).to.equal(4e6);
         });
 
         it('throws if the contract does not exist', async function() {
