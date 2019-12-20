@@ -7,6 +7,7 @@ interface LoaderConfig {
   provider: any;
   defaultSender?: string;
   defaultGas?: number;
+  defaultGasPrice?: number;
 }
 
 interface Loader {
@@ -44,8 +45,9 @@ abstract class BaseLoader implements Loader {
   provider: any;
   defaultSender?: string;
   defaultGas?: number;
+  defaultGasPrice?: number;
 
-  constructor(providerOrWeb3: any, defaultSender?: string, defaultGas?: number) {
+  constructor(providerOrWeb3: any, defaultSender?: string, defaultGas?: number, defaultGasPrice?: number) {
     if (providerOrWeb3.currentProvider) {
       this.provider = providerOrWeb3.currentProvider;
       this.web3 = providerOrWeb3;
@@ -55,6 +57,7 @@ abstract class BaseLoader implements Loader {
 
     this.defaultSender = defaultSender;
     this.defaultGas = defaultGas;
+    this.defaultGasPrice = defaultGasPrice;
   }
 
   public fromArtifact(contract: string, address?: string): any {
@@ -69,7 +72,12 @@ export class Web3Loader extends BaseLoader {
   private _web3Contract: any;
 
   public fromABI(abi: object, bytecode?: string, address?: string): any {
-    return new this.web3Contract(abi, address, { data: bytecode, from: this.defaultSender, gas: this.defaultGas });
+    return new this.web3Contract(abi, address, {
+      data: bytecode,
+      from: this.defaultSender,
+      gas: this.defaultGas,
+      gasPrice: this.defaultGasPrice,
+    });
   }
 
   protected get web3Contract(): any {
@@ -102,7 +110,11 @@ export class TruffleLoader extends BaseLoader {
     // eslint-disable-next-line @typescript-eslint/camelcase
     const abstraction = this.truffleContract({ abi, unlinked_binary: bytecode });
     abstraction.setProvider(this.provider);
-    abstraction.defaults({ from: this.defaultSender, gas: this.defaultGas });
+    abstraction.defaults({
+      from: this.defaultSender,
+      gas: this.defaultGas,
+      gasPrice: this.defaultGasPrice,
+    });
 
     if (address !== undefined) return new abstraction(address);
     return abstraction;
@@ -122,9 +134,9 @@ export class TruffleLoader extends BaseLoader {
   }
 }
 
-export function setupLoader({ provider, defaultSender, defaultGas = 4e6 }: LoaderConfig) {
+export function setupLoader({ provider, defaultSender, defaultGas = 4e6, defaultGasPrice = 1e9 }: LoaderConfig) {
   return {
-    web3: new Web3Loader(provider, defaultSender, defaultGas),
-    truffle: new TruffleLoader(provider, defaultSender, defaultGas),
+    web3: new Web3Loader(provider, defaultSender, defaultGas, defaultGasPrice),
+    truffle: new TruffleLoader(provider, defaultSender, defaultGas, defaultGasPrice),
   };
 }
