@@ -20,9 +20,10 @@ Create a loader object:
 const { setupLoader } = require('@openzeppelin/contract-loader');
 
 const loader = setupLoader({
-  provider,      // either a web3 provider or a web3 instance
-  defaultSender, // optional
-  defaultGas,    // optional, defaults to 8 million
+  provider,        // either a web3 provider or a web3 instance
+  defaultSender,   // optional
+  defaultGas,      // optional, defaults to 200 thousand
+  defaultGasPrice, // optional, defaults to 1 gigawei
 });
 ```
 

@@ -5,10 +5,11 @@
 Before contracts can be loaded, a loader object must be configured.
 
 ```typescript
-function setupLoader({ provider, defaultSender, defaultGas }: {
+function setupLoader({ provider, defaultSender, defaultGas, defaultGasPrice }: {
     provider: any;
-    defaultSender: string;
-    defaultGas: number;
+    defaultSender: string?;
+    defaultGas: number?;
+    defaultGasPrice: number?;
 });
 ```
 
@@ -24,8 +25,11 @@ The address to send transactions from when no explicit `from` field is provided.
 
 === `defaultGas`
 
-How much gas to allocate for transactions when no explicit `gas` field is provided. Optional, defaults to 8 million.
+How much gas to allocate for transactions when no explicit `gas` field is provided. Optional, defaults to 200 thousand.
 
+=== `defaultGasPrice`
+
+The gas price for transactions when no explicit `gasPrice` field is provided. Optional, defaults to 1 gigawei.
 
 == Using the Loader
 
