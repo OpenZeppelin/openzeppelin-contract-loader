@@ -9,6 +9,11 @@ interface LoaderConfig {
   defaultGas: number;
 }
 
+interface Loader {
+  fromABI(abi: object, bytecode?: string, address?: string): any;
+  fromArtifact(name: string, address?: string): any;
+}
+
 function localArtifactPath(contract: string): string {
   const buildDir = findUp.sync('build/contracts', { type: 'directory' });
   if (!buildDir) {
@@ -34,57 +39,92 @@ function loadArtifact(contract: string): any {
   return readJSONSync(artifactPath(contract), { encoding: 'utf8' });
 }
 
-function web3Loader(provider: any, defaultSender: string, defaultGas: number) {
-  const web3Contract = tryRequire('web3-eth-contract');
-  if (web3Contract === undefined) {
-    throw new Error(
-      "Could not load package 'web3-eth-contract'. Please install it alongisde @openzeppelin/contract-loader.",
-    );
+abstract class BaseLoader implements Loader {
+  web3?: any;
+  provider: any;
+  defaultSender: string;
+  defaultGas: number;
+
+  constructor(providerOrWeb3: any, defaultSender: string, defaultGas: number) {
+    if (providerOrWeb3.currentProvider) {
+      this.provider = providerOrWeb3.currentProvider;
+      this.web3 = providerOrWeb3;
+    } else {
+      this.provider = providerOrWeb3;
+    }
+
+    this.defaultSender = defaultSender;
+    this.defaultGas = defaultGas;
   }
 
-  web3Contract.setProvider(provider);
-
-  function fromABI(abi: object, bytecode = '') {
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    return new web3Contract(abi, undefined, { data: bytecode, from: defaultSender, gas: defaultGas });
-  }
-
-  function fromArtifact(contract: string) {
+  public fromArtifact(contract: string, address?: string): any {
     const { abi, bytecode } = loadArtifact(contract);
-    return fromABI(abi, bytecode);
+    return this.fromABI(abi, bytecode, address);
   }
 
-  return { fromABI, fromArtifact };
+  public abstract fromABI(abi: object, bytecode?: string, address?: string): any;
 }
 
-function truffleLoader(provider: any, defaultSender: string, defaultGas: number) {
-  const truffleContract = tryRequire('@truffle/contract');
-  if (truffleContract === undefined) {
-    throw new Error(
-      "Could not load package '@truffle/contract'. Please install it alongisde @openzeppelin/contract-loader.",
-    );
+export class Web3Loader extends BaseLoader {
+  private _web3Contract: any;
+
+  public fromABI(abi: object, bytecode?: string, address?: string): any {
+    return new this.web3Contract(abi, address, { data: bytecode, from: this.defaultSender, gas: this.defaultGas });
   }
 
-  function fromABI(abi: object, bytecode = '') {
-    // eslint-disable-next-line @typescript-eslint/camelcase
-    const abstraction = truffleContract({ abi, unlinked_binary: bytecode });
-    abstraction.setProvider(provider);
-    abstraction.defaults({ from: defaultSender, gas: defaultGas });
+  protected get web3Contract(): any {
+    if (this._web3Contract === undefined) {
+      // If we only have a web3 provider, then we need to require web3-eth-contract
+      if (this.web3 === undefined) {
+        const lib = tryRequire('web3-eth-contract');
+        if (lib === undefined) {
+          throw new Error(
+            "Could not load package 'web3-eth-contract'. Please install it alongisde @openzeppelin/contract-loader.",
+          );
+        }
+        lib.setProvider(this.provider);
+        this._web3Contract = lib;
+      }
+      // Otherwise, we can use the web3.eth.Contract directly, and not require any extra deps
+      else {
+        this._web3Contract = this.web3.eth.Contract;
+      }
+    }
 
+    return this._web3Contract;
+  }
+}
+
+export class TruffleLoader extends BaseLoader {
+  private _truffleContract: any;
+
+  public fromABI(abi: object, bytecode?: string, address?: string) {
+    // eslint-disable-next-line @typescript-eslint/camelcase
+    const abstraction = this.truffleContract({ abi, unlinked_binary: bytecode });
+    abstraction.setProvider(this.provider);
+    abstraction.defaults({ from: this.defaultSender, gas: this.defaultGas });
+
+    if (address !== undefined) return new abstraction(address);
     return abstraction;
   }
 
-  function fromArtifact(contract: string) {
-    const { abi, bytecode } = loadArtifact(contract);
-    return fromABI(abi, bytecode);
+  protected get truffleContract(): any {
+    if (this._truffleContract === undefined) {
+      const lib = tryRequire('@truffle/contract');
+      if (lib === undefined) {
+        throw new Error(
+          "Could not load package '@truffle/contract'. Please install it alongisde @openzeppelin/contract-loader.",
+        );
+      }
+      this._truffleContract = lib;
+    }
+    return this._truffleContract;
   }
-
-  return { fromABI, fromArtifact };
 }
 
-export function setupLoader({ provider, defaultSender = '', defaultGas = 8e6 }: LoaderConfig) {
+export function setupLoader({ provider, defaultSender, defaultGas = 8e6 }: LoaderConfig) {
   return {
-    web3: web3Loader(provider, defaultSender, defaultGas),
-    truffle: truffleLoader(provider, defaultSender, defaultGas),
+    web3: new Web3Loader(provider, defaultSender, defaultGas),
+    truffle: new TruffleLoader(provider, defaultSender, defaultGas),
   };
 }

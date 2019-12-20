@@ -11,7 +11,7 @@
 npm install @openzeppelin/contract-loader
 ```
 
-You will also need to install `web3-eth-contract` and/or `@truffle/contract`, depending on which abstractions you want to be able to load.
+You may also need to install `web3-eth-contract` or `@truffle/contract`, depending on which abstractions you want to be able to load.
 
 ## Usage
 
@@ -21,13 +21,15 @@ You will also need to install `web3-eth-contract` and/or `@truffle/contract`, de
 const { setupLoader } = require('@openzeppelin/contract-loader');
 
 const loader = setupLoader({
-  provider,
+  provider,      // either a web3 provider or a web3 instance
   defaultSender, // optional
-  defaultGas, // optional - defaults to 8 million
+  defaultGas,    // optional, defaults to 8 million
 });
 ```
 
 ### Loading web3 contracts
+
+When loading web3 contracts, you will need to either pass a `web3` instance as a `provider`, or install the peer dependency `web3-eth-contract`.
 
 ```javascript
 const web3Loader = loader.web3;
@@ -36,11 +38,20 @@ const web3Loader = loader.web3;
 const ERC20 = web3Loader.fromArtifact('ERC20');
 
 // Or load directly from an ABI
-const abi = [ ... ];
+const abi = [{ 
+  "constant": true, 
+  "name": "totalSupply", 
+  "outputs": [{"internalType": "uint256", "type": "uint256"}],
+  "type": "function"
+}];
 const ERC20 = web3Loader.fromABI(abi);
 
 // Deploy token
 const token = await ERC20.deploy().send();
+
+// Or load from artifact at a specific address
+const address = token.options.address;
+const theSameToken = web3Loader.fromArtifact('ERC20', address);
 
 // Query blockchain state and send transactions
 const balance = await token.methods.balanceOf(sender).call();
@@ -49,6 +60,8 @@ await token.methods.transfer(receiver, balance).send({ from: sender });
 
 ### Loading truffle contracts
 
+When loading truffle contracts, you will need to install the `@truffle/contract` dependency.
+
 ```javascript
 const truffleLoader = loader.truffle;
 
@@ -56,7 +69,12 @@ const truffleLoader = loader.truffle;
 const ERC20 = truffleLoader.fromArtifact('ERC20');
 
 // Or load directly from an ABI
-const abi = [ ... ];
+const abi = [{ 
+  "constant": true, 
+  "name": "totalSupply", 
+  "outputs": [{"internalType": "uint256", "type": "uint256"}],
+  "type": "function"
+}];
 const ERC20 = truffleLoader.fromABI(abi);
 
 // Deploy token
