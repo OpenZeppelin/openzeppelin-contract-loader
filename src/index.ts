@@ -5,8 +5,8 @@ import { join } from 'path';
 
 interface LoaderConfig {
   provider: any;
-  defaultSender: string;
-  defaultGas: number;
+  defaultSender?: string;
+  defaultGas?: number;
 }
 
 interface Loader {
@@ -42,10 +42,10 @@ function loadArtifact(contract: string): any {
 abstract class BaseLoader implements Loader {
   web3?: any;
   provider: any;
-  defaultSender: string;
-  defaultGas: number;
+  defaultSender?: string;
+  defaultGas?: number;
 
-  constructor(providerOrWeb3: any, defaultSender: string, defaultGas: number) {
+  constructor(providerOrWeb3: any, defaultSender?: string, defaultGas?: number) {
     if (providerOrWeb3.currentProvider) {
       this.provider = providerOrWeb3.currentProvider;
       this.web3 = providerOrWeb3;
