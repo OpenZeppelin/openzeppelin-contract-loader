@@ -65,6 +65,7 @@ function testTruffleLoaderWithDefaults(loader) {
 
 contract('direct-dependency', function([defaultSender]) {
   const defaultGas = 5e6;
+  const defaultGasPrice = 2e9;
 
   describe('project contracts', async function() {
     describe('web3 contracts', function() {
@@ -76,9 +77,14 @@ contract('direct-dependency', function([defaultSender]) {
           expect(Foo.options.from).to.be.undefined;
         });
 
-        it('default gas is 8 million', async function() {
+        it('default gas is 200k', async function() {
           const Foo = web3Loader.fromArtifact('Foo');
-          expect(Foo.options.gas).to.equal(8e6);
+          expect(Foo.options.gas).to.equal(2e5);
+        });
+
+        it('default gas price is 1 gwei', async function() {
+          const Foo = web3Loader.fromArtifact('Foo');
+          expect(Foo.options.gasPrice).to.equal(1e9.toString());
         });
 
         it('throws if the contract does not exist', async function() {
@@ -91,6 +97,7 @@ contract('direct-dependency', function([defaultSender]) {
           provider: web3.eth.currentProvider,
           defaultSender,
           defaultGas,
+          defaultGasPrice,
         }).web3;
 
         it('default sender is set', async function() {
@@ -101,6 +108,11 @@ contract('direct-dependency', function([defaultSender]) {
         it('default gas is set', async function() {
           const Foo = web3Loader.fromArtifact('Foo');
           expect(Foo.options.gas).to.equal(defaultGas);
+        });
+
+        it('default gas price is set', async function() {
+          const Foo = web3Loader.fromArtifact('Foo');
+          expect(Foo.options.gasPrice.toString()).to.equal(defaultGasPrice.toString());
         });
 
         testWeb3LoaderWithDefaults(web3Loader);
@@ -128,9 +140,14 @@ contract('direct-dependency', function([defaultSender]) {
           expect(Foo.defaults().from).to.be.undefined;
         });
 
-        it('default gas is 8 million', async function() {
+        it('default gas is 200k', async function() {
           const Foo = truffleLoader.fromArtifact('Foo');
-          expect(Foo.defaults().gas).to.equal(8e6);
+          expect(Foo.defaults().gas).to.equal(2e5);
+        });
+
+        it('default gas price is 1 gwei', async function() {
+          const Foo = truffleLoader.fromArtifact('Foo');
+          expect(Foo.defaults().gasPrice.toString()).to.equal(1e9.toString());
         });
 
         it('throws if the contract does not exist', async function() {
@@ -143,6 +160,7 @@ contract('direct-dependency', function([defaultSender]) {
           provider: web3.eth.currentProvider,
           defaultSender,
           defaultGas,
+          defaultGasPrice,
         }).truffle;
 
         it('default sender is set', async function() {
@@ -153,6 +171,11 @@ contract('direct-dependency', function([defaultSender]) {
         it('default gas is set', async function() {
           const Foo = truffleLoader.fromArtifact('Foo');
           expect(Foo.defaults().gas).to.equal(defaultGas);
+        });
+
+        it('default gas price is set', async function() {
+          const Foo = truffleLoader.fromArtifact('Foo');
+          expect(Foo.defaults().gasPrice.toString()).to.equal(defaultGasPrice.toString());
         });
 
         testTruffleLoaderWithDefaults(truffleLoader);
