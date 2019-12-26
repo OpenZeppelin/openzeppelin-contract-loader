@@ -60,7 +60,7 @@ await token.transfer(receiver, balance, { from: sender });
 
 == Learn More
 
-* For detailed usage information, take a look at the xref:api.adoc[API Reference].
+* For detailed usage information, take a look at the link:docs/modules/ROOT/pages/api.adoc[API Reference].
 
 == License
 
