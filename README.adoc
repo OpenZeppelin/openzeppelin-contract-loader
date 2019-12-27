@@ -7,6 +7,16 @@ https://circleci.com/gh/OpenZeppelin/openzeppelin-contract-loader[image:https://
 
 **Load contract objects from built artifacts or ABIs.** Includes support for both `web3-eth-contract` and `@truffle/contract` objects.
 
+```javascript
+const { setupLoader } = require('@openzeppelin/contract-loader');
+const loader = setupLoader({ provider: new Web3('http://localhost:8545') }).web3;
+
+const address = '0xCfEB869F69431e42cdB54A4F4f105C19C080A601';
+const erc20 = loader.fromArtifact('ERC20', address);
+
+const totalSupply = await token.methods.totalSupply().call();
+```
+
 == Overview
 
 === Installation
