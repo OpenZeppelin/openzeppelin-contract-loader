@@ -1,7 +1,7 @@
 # OpenZeppelin Contract Loader
 
-https://www.npmjs.org/package/@openzeppelin/contract-loader[image:https://img.shields.io/npm/v/@openzeppelin/contract-loader.svg[NPM]]
-https://circleci.com/gh/OpenZeppelin/openzeppelin-contract-loader[image:https://circleci.com/gh/OpenZeppelin/openzeppelin-contract-loader.svg?style=shield[CircleCI]]
+[![NPM Package](https://img.shields.io/npm/v/@openzeppelin/contract-loader.svg)](https://www.npmjs.org/package/@openzeppelin/contract-loader)
+[![Build Status](https://circleci.com/gh/OpenZeppelin/openzeppelin-contract-loader.svg?style=shield)](https://circleci.com/gh/OpenZeppelin/openzeppelin-contract-loader)
 
 **Load contract objects from built artifacts or ABIs.** Includes support for both `web3-eth-contract` and `@truffle/contract` objects.
 
@@ -15,17 +15,17 @@ const erc20 = loader.fromArtifact('ERC20', address);
 const totalSupply = await token.methods.totalSupply().call();
 ```
 
-== Overview
+## Overview
 
-=== Installation
+### Installation
 
 ```bash
 npm install @openzeppelin/contract-loader
 ```
 
-You may also need to install https://www.npmjs.com/package/web3-eth-contract[`web3-eth-contract`] or https://www.npmjs.com/package/@truffle/contract[`@truffle/contract`], depending on which abstractions you want to be able to load.
+You may also need to install [`web3-eth-contract`](https://www.npmjs.com/package/web3-eth-contract) or [`@truffle/contract`](https://www.npmjs.com/package/@truffle/contract), depending on which abstractions you want to be able to load.
 
-=== Usage
+### Usage
 
 Create a loader object:
 
@@ -66,10 +66,10 @@ const balance = await token.balanceOf(sender);
 await token.transfer(receiver, balance, { from: sender });
 ```
 
-== Learn More
+## Learn More
 
-* For detailed usage information, take a look at the link:docs/modules/ROOT/pages/api.adoc[API Reference].
+* For detailed usage information, take a look at the [API Reference](https://docs.openzeppelin.com/contract-loader/api).
 
-== License
+## License
 
-link:LICENSE[MIT].
+[MIT](LICENSE).
