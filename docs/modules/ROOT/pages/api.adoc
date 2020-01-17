@@ -34,6 +34,8 @@ The gas price for transactions when no explicit `gasPrice` field is provided. Op
 
 === `artifactsDir`
 
+_Available since v0.6.1_
+
 The directory from where local built (`.json`) artifacts are loaded, relative to the project's root directory. Artifacts from dependencies (such as '@openzeppelin/contracts/ERC20') are always loaded from the dependency's directory.
 
 Optional, defaults to `build/contracts`.
