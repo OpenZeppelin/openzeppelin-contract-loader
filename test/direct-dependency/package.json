@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "truffle compile && truffle test"
+    "test": "truffle compile && mv build/contracts/Bar.json other-directory/build-artifacts/ && truffle test"
   },
   "author": "",
   "license": "MIT",

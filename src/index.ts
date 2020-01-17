@@ -11,6 +11,7 @@ interface LoaderConfig {
   defaultSender?: string;
   defaultGas?: number;
   defaultGasPrice?: number;
+  artifactsDir?: string;
 }
 
 interface Loader {
@@ -18,10 +19,10 @@ interface Loader {
   fromArtifact(name: string, address?: string): any;
 }
 
-function localArtifactPath(contract: string): string {
-  const buildDir = findUp.sync('build/contracts', { type: 'directory' });
+function localArtifactPath(contract: string, artifactsDir: string): string {
+  const buildDir = findUp.sync(artifactsDir, { type: 'directory' });
   if (!buildDir) {
-    throw new Error('Could not find local "build/contracts" directory');
+    throw new Error(`Could not find local ${artifactsDir} when looking for local artifacts`);
   }
   return join(buildDir, `${contract}.json`);
 }
@@ -33,12 +34,14 @@ function dependencyArtifactPath(contractWithDependency: string): string {
   try {
     return require.resolve(`${dependency}/build/contracts/${contract}.json`);
   } catch (err) {
-    throw new Error(`Cannot find contract  ${contractWithDependency}: ${err.message}`);
+    throw new Error(`Cannot find contract ${contractWithDependency}: ${err.message}`);
   }
 }
 
-function loadArtifact(contract: string): any {
-  const artifactPath = contract.includes('/') ? dependencyArtifactPath : localArtifactPath;
+function loadArtifact(contract: string, artifactsDir: string): any {
+  const artifactPath = contract.includes('/')
+    ? dependencyArtifactPath
+    : (c: string) => localArtifactPath(c, artifactsDir);
 
   return readJSONSync(artifactPath(contract), { encoding: 'utf8' });
 }
@@ -49,8 +52,15 @@ abstract class BaseLoader implements Loader {
   defaultSender?: string;
   defaultGas?: number;
   defaultGasPrice?: number;
+  artifactsDir: string;
 
-  constructor(providerOrWeb3: any, defaultSender?: string, defaultGas?: number, defaultGasPrice?: number) {
+  constructor(
+    providerOrWeb3: any,
+    defaultSender?: string,
+    defaultGas?: number,
+    defaultGasPrice?: number,
+    artifactsDir = 'build/contracts',
+  ) {
     if (providerOrWeb3.currentProvider) {
       this.provider = providerOrWeb3.currentProvider;
       this.web3 = providerOrWeb3;
@@ -61,10 +71,11 @@ abstract class BaseLoader implements Loader {
     this.defaultSender = defaultSender;
     this.defaultGas = defaultGas;
     this.defaultGasPrice = defaultGasPrice;
+    this.artifactsDir = artifactsDir;
   }
 
   public fromArtifact(contract: string, address?: string): any {
-    const { abi, bytecode } = loadArtifact(contract);
+    const { abi, bytecode } = loadArtifact(contract, this.artifactsDir);
     return this.fromABI(abi, bytecode, address);
   }
 
@@ -142,9 +153,10 @@ export function setupLoader({
   defaultSender,
   defaultGas = DEFAULT_GAS,
   defaultGasPrice = DEFAULT_GAS_PRICE,
+  artifactsDir,
 }: LoaderConfig) {
   return {
-    web3: new Web3Loader(provider, defaultSender, defaultGas, defaultGasPrice),
-    truffle: new TruffleLoader(provider, defaultSender, defaultGas, defaultGasPrice),
+    web3: new Web3Loader(provider, defaultSender, defaultGas, defaultGasPrice, artifactsDir),
+    truffle: new TruffleLoader(provider, defaultSender, defaultGas, defaultGasPrice, artifactsDir),
   };
 }

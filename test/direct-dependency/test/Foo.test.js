@@ -7,7 +7,7 @@ const { expect } = chai;
 
 function testWeb3LoaderWithDefaults(loader) {
   it('throws if the contract does not exist', async function() {
-    expect(() => loader.fromArtifact('Baz')).to.throw();
+    expect(() => loader.fromArtifact('Bar')).to.throw();
   });
 
   context('with deployed contract', function() {
@@ -36,7 +36,7 @@ function testWeb3LoaderWithDefaults(loader) {
 
 function testTruffleLoaderWithDefaults(loader) {
   it('throws if the contract does not exist', async function() {
-    expect(() => loader.fromArtifact('Baz')).to.throw();
+    expect(() => loader.fromArtifact('Bar')).to.throw();
   });
 
   context('with deployed contract', function() {
@@ -88,7 +88,7 @@ contract('direct-dependency', function([defaultSender]) {
         });
 
         it('throws if the contract does not exist', async function() {
-          expect(() => web3Loader.fromArtifact('Baz')).to.throw();
+          expect(() => web3Loader.fromArtifact('Bar')).to.throw();
         });
       });
 
@@ -151,7 +151,7 @@ contract('direct-dependency', function([defaultSender]) {
         });
 
         it('throws if the contract does not exist', async function() {
-          expect(() => truffleLoader.fromArtifact('Baz')).to.throw();
+          expect(() => truffleLoader.fromArtifact('Bar')).to.throw();
         });
       });
 
@@ -205,7 +205,7 @@ contract('direct-dependency', function([defaultSender]) {
       });
 
       it('fails to load contract from missing dependency', async function () {
-        expect(() => 
+        expect(() =>
           this.loader.web3.fromArtifact('foobar/IERC20')
         ).to.throw(/Cannot find contract/);
       });
@@ -218,9 +218,41 @@ contract('direct-dependency', function([defaultSender]) {
       });
 
       it('fails to load contract from missing dependency', async function () {
-        expect(() => 
+        expect(() =>
           this.loader.truffle.fromArtifact('foobar/IERC20')
         ).to.throw(/Cannot find contract/);
+      });
+    });
+  });
+
+  describe('with custom artifactsDir', function () {
+    beforeEach('setup loader', function () {
+      this.loader = setupLoader({ provider: web3, artifactsDir: 'other-directory/build-artifacts' });
+    });
+
+    describe('web3 contracts', function () {
+      it('loads a contract', async function () {
+        const Bar = this.loader.web3.fromArtifact('Bar');
+        expect(Bar.methods).to.have.property('set').that.is.a('function');
+      });
+
+      it('fails to load contracts from default path', async function () {
+        expect(() =>
+          this.loader.web3.fromArtifact('Foo')
+        ).to.throw();
+      });
+    });
+
+    describe('truffle contracts', function () {
+      it('loads an openzeppelin contract', async function () {
+        const Bar = this.loader.truffle.fromArtifact('Bar');
+        expect(Bar.abi).to.have.lengthOf(3);
+      });
+
+      it('fails to load contracts from default path', async function () {
+        expect(() =>
+          this.loader.truffle.fromArtifact('Foo')
+        ).to.throw();
       });
     });
   });
