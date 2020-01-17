@@ -11,7 +11,7 @@ interface LoaderConfig {
   defaultSender?: string;
   defaultGas?: number;
   defaultGasPrice?: number;
-  localPath?: string;
+  localArtifactsDirectory?: string;
 }
 
 interface Loader {
@@ -19,10 +19,10 @@ interface Loader {
   fromArtifact(name: string, address?: string): any;
 }
 
-function localArtifactPath(contract: string, localPath: string): string {
-  const buildDir = findUp.sync(localPath, { type: 'directory' });
+function localArtifactPath(contract: string, localArtifactsDirectory: string): string {
+  const buildDir = findUp.sync(localArtifactsDirectory, { type: 'directory' });
   if (!buildDir) {
-    throw new Error('Could not find local "build/contracts" directory');
+    throw new Error(`Could not find local ${localArtifactsDirectory} when looking for local artifacts`);
   }
   return join(buildDir, `${contract}.json`);
 }
@@ -38,8 +38,10 @@ function dependencyArtifactPath(contractWithDependency: string): string {
   }
 }
 
-function loadArtifact(contract: string, localPath: string): any {
-  const artifactPath = contract.includes('/') ? dependencyArtifactPath : (c: string) => localArtifactPath(c, localPath);
+function loadArtifact(contract: string, localArtifactsDirectory: string): any {
+  const artifactPath = contract.includes('/')
+    ? dependencyArtifactPath
+    : (c: string) => localArtifactPath(c, localArtifactsDirectory);
 
   return readJSONSync(artifactPath(contract), { encoding: 'utf8' });
 }
@@ -50,14 +52,14 @@ abstract class BaseLoader implements Loader {
   defaultSender?: string;
   defaultGas?: number;
   defaultGasPrice?: number;
-  localPath: string;
+  localArtifactsDirectory: string;
 
   constructor(
     providerOrWeb3: any,
     defaultSender?: string,
     defaultGas?: number,
     defaultGasPrice?: number,
-    localPath = 'build/contracts',
+    localArtifactsDirectory = 'build/contracts',
   ) {
     if (providerOrWeb3.currentProvider) {
       this.provider = providerOrWeb3.currentProvider;
@@ -69,11 +71,11 @@ abstract class BaseLoader implements Loader {
     this.defaultSender = defaultSender;
     this.defaultGas = defaultGas;
     this.defaultGasPrice = defaultGasPrice;
-    this.localPath = localPath;
+    this.localArtifactsDirectory = localArtifactsDirectory;
   }
 
   public fromArtifact(contract: string, address?: string): any {
-    const { abi, bytecode } = loadArtifact(contract, this.localPath);
+    const { abi, bytecode } = loadArtifact(contract, this.localArtifactsDirectory);
     return this.fromABI(abi, bytecode, address);
   }
 
@@ -151,10 +153,10 @@ export function setupLoader({
   defaultSender,
   defaultGas = DEFAULT_GAS,
   defaultGasPrice = DEFAULT_GAS_PRICE,
-  localPath,
+  localArtifactsDirectory,
 }: LoaderConfig) {
   return {
-    web3: new Web3Loader(provider, defaultSender, defaultGas, defaultGasPrice, localPath),
-    truffle: new TruffleLoader(provider, defaultSender, defaultGas, defaultGasPrice, localPath),
+    web3: new Web3Loader(provider, defaultSender, defaultGas, defaultGasPrice, localArtifactsDirectory),
+    truffle: new TruffleLoader(provider, defaultSender, defaultGas, defaultGasPrice, localArtifactsDirectory),
   };
 }

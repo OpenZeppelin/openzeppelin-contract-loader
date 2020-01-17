@@ -225,9 +225,9 @@ contract('direct-dependency', function([defaultSender]) {
     });
   });
 
-  describe('with custom localPath', function () {
+  describe('with custom localArtifactsDirectory', function () {
     beforeEach('setup loader', function () {
-      this.loader = setupLoader({ provider: web3, localPath: 'other-directory/build-artifacts' });
+      this.loader = setupLoader({ provider: web3, localArtifactsDirectory: 'other-directory/build-artifacts' });
     });
 
     describe('web3 contracts', function () {
