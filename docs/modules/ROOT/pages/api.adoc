@@ -10,7 +10,7 @@ function setupLoader({ provider, defaultSender, defaultGas, defaultGasPrice }: {
     defaultSender: string?;
     defaultGas: number?;
     defaultGasPrice: number?;
-    localArtifactsDirectory?: string;
+    artifactsDir?: string;
 });
 ```
 
@@ -32,7 +32,7 @@ How much gas to allocate for transactions when no explicit `gas` field is provid
 
 The gas price for transactions when no explicit `gasPrice` field is provided. Optional, defaults to 1 gigawei.
 
-=== `localArtifactsDirectory`
+=== `artifactsDir`
 
 The directory from where local built (`.json`) artifacts are loaded, relative to the project's root directory. Artifacts from dependencies (such as '@openzeppelin/contracts/ERC20') are always loaded from the dependency's directory.
 
