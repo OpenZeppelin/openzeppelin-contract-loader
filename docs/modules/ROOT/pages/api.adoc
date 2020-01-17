@@ -10,7 +10,7 @@ function setupLoader({ provider, defaultSender, defaultGas, defaultGasPrice }: {
     defaultSender: string?;
     defaultGas: number?;
     defaultGasPrice: number?;
-    artifactsPath?: string;
+    localArtifactsDirectory?: string;
 });
 ```
 
