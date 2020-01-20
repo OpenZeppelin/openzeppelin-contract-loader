@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.6.1 (unreleased)
+## 0.6.1 (2020-01-20)
  * Added `artifactsDir` option. ([#17](https://github.com/OpenZeppelin/openzeppelin-contract-loader/pull/17))
 
 ## 0.6.0 (2019-12-26)
