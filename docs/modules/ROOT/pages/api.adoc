@@ -73,7 +73,7 @@ Receives the contract's `name` and looks for its corresponding `.json` artifact 
 Contracts from dependencies can be loaded by prefixing the contract name with the dependency:
 
 ```javascript
-loader.fromArtifact('@openzeppelin/contracts/token/ERC20/ERC20.sol');
+loader.fromArtifact('@openzeppelin/contracts/ERC20');
 ```
 ====
 
