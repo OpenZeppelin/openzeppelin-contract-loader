@@ -1,5 +1,6 @@
 # OpenZeppelin Contract Loader
 
+[![Docs](https://img.shields.io/badge/docs-%F0%9F%93%84-blue)](https://docs.openzeppelin.com/contract-loader)
 [![NPM Package](https://img.shields.io/npm/v/@openzeppelin/contract-loader.svg)](https://www.npmjs.org/package/@openzeppelin/contract-loader)
 [![Build Status](https://circleci.com/gh/OpenZeppelin/openzeppelin-contract-loader.svg?style=shield)](https://circleci.com/gh/OpenZeppelin/openzeppelin-contract-loader)
 
@@ -24,6 +25,8 @@ npm install @openzeppelin/contract-loader
 ```
 
 You may also need to install [`web3-eth-contract`](https://www.npmjs.com/package/web3-eth-contract) or [`@truffle/contract`](https://www.npmjs.com/package/@truffle/contract), depending on which abstractions you want to be able to load.
+
+>Contract Loader requires access to the filesystem to read contract ABIs. Because of this, it will not work in a browser-based Dapp.
 
 ### Usage
 
