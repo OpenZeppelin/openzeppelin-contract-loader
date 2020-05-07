@@ -26,6 +26,8 @@ npm install @openzeppelin/contract-loader
 
 You may also need to install [`web3-eth-contract`](https://www.npmjs.com/package/web3-eth-contract) or [`@truffle/contract`](https://www.npmjs.com/package/@truffle/contract), depending on which abstractions you want to be able to load.
 
+>Contract Loader requires access to the filesystem to read contract ABIs. Because of this, it will not work in a browser-based Dapp.
+
 ### Usage
 
 Create a loader object:
