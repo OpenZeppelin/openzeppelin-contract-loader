@@ -1,6 +1,5 @@
 import { readJSONSync } from 'fs-extra';
 import findUp from 'find-up';
-import tryRequire from 'try-require';
 import { join } from 'path';
 
 const DEFAULT_GAS = 2e5;
@@ -98,12 +97,14 @@ export class Web3Loader extends BaseLoader {
     if (this._web3Contract === undefined) {
       // If we only have a web3 provider, then we need to require web3-eth-contract
       if (this.web3 === undefined) {
-        const lib = tryRequire('web3-eth-contract');
-        if (lib === undefined) {
+        const libPath = require.resolve('web3-eth-contract');
+        if (libPath === undefined) {
           throw new Error(
             "Could not load package 'web3-eth-contract'. Please install it alongisde @openzeppelin/contract-loader.",
           );
         }
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const lib = require(libPath);
         lib.setProvider(this.provider);
         this._web3Contract = lib;
       }
@@ -136,12 +137,14 @@ export class TruffleLoader extends BaseLoader {
 
   protected get truffleContract(): any {
     if (this._truffleContract === undefined) {
-      const lib = tryRequire('@truffle/contract');
-      if (lib === undefined) {
+      const libPath = require.resolve('@truffle/contract');
+      if (libPath === undefined) {
         throw new Error(
           "Could not load package '@truffle/contract'. Please install it alongisde @openzeppelin/contract-loader.",
         );
       }
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const lib = require(libPath);
       this._truffleContract = lib;
     }
     return this._truffleContract;

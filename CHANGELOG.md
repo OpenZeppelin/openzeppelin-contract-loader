@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.2 (2020-10-27)
+ * Remove `try-require` depedency as it caused issues in some cases.
+
 ## 0.6.1 (2020-01-20)
  * Added `artifactsDir` option. ([#17](https://github.com/OpenZeppelin/openzeppelin-contract-loader/pull/17))
 
