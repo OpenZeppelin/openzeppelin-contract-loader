@@ -1,5 +1,8 @@
 # Changelog
 
+## 0.6.3 (2021-08-20)
+ * Remove default gas price, for compatibility with the London hard fork.
+
 ## 0.6.2 (2020-10-27)
  * Remove `try-require` depedency as it caused issues in some cases.
 

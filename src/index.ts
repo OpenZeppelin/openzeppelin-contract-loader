@@ -3,7 +3,6 @@ import findUp from 'find-up';
 import { join } from 'path';
 
 const DEFAULT_GAS = 2e5;
-const DEFAULT_GAS_PRICE = 1e9;
 
 interface LoaderConfig {
   provider: any;
@@ -155,7 +154,7 @@ export function setupLoader({
   provider,
   defaultSender,
   defaultGas = DEFAULT_GAS,
-  defaultGasPrice = DEFAULT_GAS_PRICE,
+  defaultGasPrice,
   artifactsDir,
 }: LoaderConfig) {
   return {

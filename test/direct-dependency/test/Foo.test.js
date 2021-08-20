@@ -82,11 +82,6 @@ contract('direct-dependency', function([defaultSender]) {
           expect(Foo.options.gas).to.equal(2e5);
         });
 
-        it('default gas price is 1 gwei', async function() {
-          const Foo = web3Loader.fromArtifact('Foo');
-          expect(Foo.options.gasPrice).to.equal(1e9.toString());
-        });
-
         it('throws if the contract does not exist', async function() {
           expect(() => web3Loader.fromArtifact('Bar')).to.throw();
         });
@@ -143,11 +138,6 @@ contract('direct-dependency', function([defaultSender]) {
         it('default gas is 200k', async function() {
           const Foo = truffleLoader.fromArtifact('Foo');
           expect(Foo.defaults().gas).to.equal(2e5);
-        });
-
-        it('default gas price is 1 gwei', async function() {
-          const Foo = truffleLoader.fromArtifact('Foo');
-          expect(Foo.defaults().gasPrice.toString()).to.equal(1e9.toString());
         });
 
         it('throws if the contract does not exist', async function() {
