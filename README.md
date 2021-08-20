@@ -1,3 +1,5 @@
+> :warning: **This project is not being actively maintained.**
+
 # OpenZeppelin Contract Loader
 
 [![Docs](https://img.shields.io/badge/docs-%F0%9F%93%84-blue)](https://docs.openzeppelin.com/contract-loader)
