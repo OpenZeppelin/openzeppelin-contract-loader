@@ -1,6 +1,6 @@
 {
   "name": "@openzeppelin/contract-loader",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "description": "Load contract ABIs from built artifacts and return contract objects",
   "files": [
     "lib"
